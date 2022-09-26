@@ -96,7 +96,7 @@ class TransformerModel(nn.Module):
         self.n_dims = n_dims
         self._read_in = nn.Linear(n_dims, n_embd)
         self._backbone = GPT2Model(configuration)
-        self._read_out = nn.Linear(n_embd, 1)
+        self._read_out = nn.Linear(n_embd, 1) # we're doing binary classification rather than regression: change this
 
     @staticmethod
     def _combine(xs_b, ys_b):
