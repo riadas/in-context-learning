@@ -105,7 +105,7 @@ class TransformerModel(nn.Module):
         ys_b_wide = torch.cat(
             (
                 ys_b.view(bsize, points, 1),
-                torch.zeros(bsize, points, dim - 1, device=ys_b.device),
+                torch.zeros(bsize, points, dim - 1, device=ys_b.device), # padding the scalar y-values with suffix zeros
             ),
             axis=2,
         )

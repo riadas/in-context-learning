@@ -60,6 +60,7 @@ def get_task_sampler(
         "quadratic_regression": QuadraticRegression,
         "relu_2nn_regression": Relu2nnRegression,
         "decision_tree": DecisionTree,
+        "rule_induction": RuleInduction,
     }
     if task_name in task_names_to_classes:
         task_cls = task_names_to_classes[task_name]
@@ -169,6 +170,25 @@ class LinearClassification(LinearRegression):
     def get_training_metric():
         return cross_entropy
 
+
+class RuleInduction(Task):
+    def __init__(self):
+        raise NotImplementedError
+
+    def evaluate(self, xs_b):
+        raise NotImplementedError
+
+    @staticmethod
+    def generate_pool_dict():
+        raise NotImplementedError
+
+    @staticmethod
+    def get_metric():
+        return accuracy
+
+    @staticmethod
+    def get_training_metric():
+        return cross_entropy
 
 class NoisyLinearRegression(LinearRegression):
     def __init__(
