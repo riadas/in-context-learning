@@ -24,7 +24,7 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
   while len(formulas) != num_formulas:
     formula = gen_DNF(feature_dim)
     if min_clauses != -1: # ensure that formula has minimum number of non-constant clauses
-      while num_non_constant_clauses(formula) < min_clauses:
+      while (formula in formulas) or (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses)):
         formula = gen_DNF(feature_dim)
 
     labeled_vectors = []
@@ -97,8 +97,19 @@ def format_label(label, dim):
   else:
     return [0, 1]
 
-def gen_train_data():
-  pass
+def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False):
+  _, prompts = gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses, mixed_pos_and_neg, format_labels)
 
-def gen_test_data():
-  pass
+  train_size = int(num_formulas * train_split)
+
+  train_prompts = prompts[:train_size]
+  # test_prompts = prompts[train_size:]
+
+  with open("../data/training_data.txt", "w+") as train_file:
+    for prompt in train_prompts:
+      formatted_prompt = str(prompt[0])[1:-1] + ", " + str(prompt[1]) + "\n<|endoftext|>\n"
+      train_file.write(formatted_prompt) 
+
+  # with open("../data/test_data.txt", "w+") as test_file:
+  #   for prompt in test_prompts:
+  #     formatted_prompt = 
