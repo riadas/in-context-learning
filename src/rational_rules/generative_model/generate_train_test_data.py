@@ -24,7 +24,7 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
   while len(formulas) != num_formulas:
     formula = gen_DNF(feature_dim)
     if min_clauses != -1: # ensure that formula has minimum number of non-constant clauses
-      while (formula in formulas) or (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses)):
+      while (formula in formulas) or (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses or num_non_constant_clauses(formula) > 5)):
         formula = gen_DNF(feature_dim)
 
     labeled_vectors = []
@@ -74,6 +74,9 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
     prompts.append((labeled_vectors, query_label))
     formulas.append(formula)
 
+    if len(formulas) % 500 == 0:
+      print("num formulas: "+str(len(formulas)))
+
   return (formulas, prompts)
 
 
@@ -109,6 +112,52 @@ def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, 
     for prompt in train_prompts:
       formatted_prompt = str(prompt[0])[1:-1] + ", " + str(prompt[1]) + "\n<|endoftext|>\n"
       train_file.write(formatted_prompt) 
+
+  # with open("../data/test_data.txt", "w+") as test_file:
+  #   for prompt in test_prompts:
+  #     formatted_prompt = 
+
+def gen_train_and_test_data_for_classifier(train_val_test_split, num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False):
+  formulas, prompts = gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses, mixed_pos_and_neg, format_labels)
+
+  train_split, val_split, _ = train_val_test_split 
+
+  train_size = int(num_formulas * train_split)
+  val_size = int(num_formulas * val_split)
+  # test_size = num_formulas - train_size - val_size
+
+  train_prompts = prompts[:train_size]
+  val_prompts = prompts[train_size:train_size + val_size]
+  # test_prompts = prompts[train_size + val_size:]
+
+  train_formulas = formulas[:train_size]
+  val_formulas = formulas[train_size:train_size + val_size]
+
+  # train/val files
+  with open("../data/training_data_classifier.txt", "w+") as train_file:
+    for prompt in train_prompts:
+      formatted_prompt = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
+      train_file.write(formatted_prompt)
+
+  with open("../data/validation_data_classifier.txt", "w+") as val_file:
+    for prompt in val_prompts:
+      formatted_prompt = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
+      val_file.write(formatted_prompt)
+
+  # formula files (for reference)
+  with open("../data/training_formulas_classifier.txt", "w+") as train_file:
+    for formula in train_formulas:
+      train_file.write(formula + "\n")
+
+  with open("../data/validation_formulas_classifier.txt", "w+") as val_file:
+    for formula in val_formulas:
+      val_file.write(formula + "\n")
+
+
+  # with open("../data/test_data_classifier.txt", "w+") as test_file:
+  #   for prompt in test_prompts:
+  #     formatted_prompt = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
+  #     test_file.write(formatted_prompt)
 
   # with open("../data/test_data.txt", "w+") as test_file:
   #   for prompt in test_prompts:
