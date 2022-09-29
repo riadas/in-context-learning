@@ -19,7 +19,7 @@ GPT and GPT-2 are fine-tuned using a causal language modeling (CLM) loss while B
 using a masked language modeling (MLM) loss.
 
 Sample command:
-> python run_lm_finetuning.py --train_data_file data/training_data.txt --output_dir out --model_type gpt2
+> python run_lm_finetuning.py --train_data_file data/text_generation/training_data.txt --output_dir /data5/riadas/rational_rules_outs --model_type gpt2
 """ 
 
 import argparse
@@ -122,6 +122,7 @@ class TextDataset(Dataset):
 
 
 def load_and_cache_examples(args, tokenizer, evaluate=False):
+    print("LOAD_AND_CACHE_EXAMPLES")
     dataset = TextDataset(
         tokenizer,
         args,
@@ -132,6 +133,7 @@ def load_and_cache_examples(args, tokenizer, evaluate=False):
 
 
 def set_seed(args):
+    print("SET_SEED")
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -140,6 +142,7 @@ def set_seed(args):
 
 
 def _rotate_checkpoints(args, checkpoint_prefix, use_mtime=False):
+    print("ROTATE_CHECKPOINTS")
     if not args.save_total_limit:
         return
     if args.save_total_limit <= 0:
@@ -194,6 +197,7 @@ def mask_tokens(inputs: torch.Tensor, tokenizer: PreTrainedTokenizer, args) -> T
 
 
 def train(args, train_dataset, model, tokenizer):
+    print("INSIDE TRAIN")
     """ Train the model """
     if args.local_rank in [-1, 0]:
         tb_writer = SummaryWriter()
@@ -375,6 +379,7 @@ def train(args, train_dataset, model, tokenizer):
 
 
 def evaluate(args, model, tokenizer, prefix=""):
+    print("EVALUATE")
     # Loop to handle MNLI double evaluation (matched, mis-matched)
     eval_output_dir = args.output_dir
 

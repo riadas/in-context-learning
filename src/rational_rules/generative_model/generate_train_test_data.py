@@ -1,6 +1,6 @@
 from generative_model import execute, gen_DNF, gen_input, num_non_constant_clauses
 import random 
-
+import os
 '''
 Generate dataset of prompts (labeled feature vectors + one unlabeled query vector for one formula) and values (label for query vector).
 @param num_formulas: number of distinct formulas (prompts)
@@ -134,22 +134,26 @@ def gen_train_and_test_data_for_classifier(train_val_test_split, num_formulas, n
   val_formulas = formulas[train_size:train_size + val_size]
 
   # train/val files
-  with open("../data/training_data_classifier.txt", "w+") as train_file:
+  data_dir = "../data/classification/params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
+  if not os.path.isdir(data_dir):
+    os.mkdir(data_dir)
+
+  with open(data_dir + "/training_data_classifier.txt", "w+") as train_file:
     for prompt in train_prompts:
       formatted_prompt = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
       train_file.write(formatted_prompt)
 
-  with open("../data/validation_data_classifier.txt", "w+") as val_file:
+  with open(data_dir + "/validation_data_classifier.txt", "w+") as val_file:
     for prompt in val_prompts:
       formatted_prompt = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
       val_file.write(formatted_prompt)
 
   # formula files (for reference)
-  with open("../data/training_formulas_classifier.txt", "w+") as train_file:
+  with open(data_dir + "/training_formulas_classifier.txt", "w+") as train_file:
     for formula in train_formulas:
       train_file.write(formula + "\n")
 
-  with open("../data/validation_formulas_classifier.txt", "w+") as val_file:
+  with open(data_dir + "/validation_formulas_classifier.txt", "w+") as val_file:
     for formula in val_formulas:
       val_file.write(formula + "\n")
 
