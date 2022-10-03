@@ -14,16 +14,17 @@ from transformers import (set_seed,
                           AdamW, 
                           get_linear_schedule_with_warmup,
                           GPT2ForSequenceClassification)
+import matplotlib.pyplot as plt
 
 # train/test data paths
 train_dataset_path = sys.argv[0]
 test_dataset_path = sys.argv[1]
+epochs = int(sys.argv[2])
 
 # Set seed for reproducibility.
 set_seed(123)
 
 # Number of training epochs (authors on fine-tuning Bert recommend between 2 and 4).
-epochs = 4
 
 # Number of batches - depending on the max sequence length and GPU memory.
 # For 512 sequence length batch of 10 works without cuda memory issues.
@@ -470,11 +471,11 @@ if __name__ == "__main__":
     all_acc['train_acc'].append(train_acc)
     all_acc['val_acc'].append(val_acc)
 
-  # Plot loss curves.
-  plot_dict(all_loss, use_xlabel='Epochs', use_ylabel='Value', use_linestyles=['-', '--'])
+  # # Plot loss curves.
+  # plot_dict(all_loss, use_xlabel='Epochs', use_ylabel='Value', use_linestyles=['-', '--'])
 
-  # Plot accuracy curves.
-  plot_dict(all_acc, use_xlabel='Epochs', use_ylabel='Value', use_linestyles=['-', '--'])
+  # # Plot accuracy curves.
+  # plot_dict(all_acc, use_xlabel='Epochs', use_ylabel='Value', use_linestyles=['-', '--'])
 
   # Get prediction form model on validation data. This is where you should use
   # your test data.
@@ -486,7 +487,29 @@ if __name__ == "__main__":
   print(evaluation_report)
 
   # Plot confusion matrix.
-  plot_confusion_matrix(y_true=true_labels, y_pred=predictions_labels, 
-                        classes=list(labels_ids.keys()), normalize=True, 
-                        magnify=0.1,
-                        )
+  # plot_confusion_matrix(y_true=true_labels, y_pred=predictions_labels, 
+  #                       classes=list(labels_ids.keys()), normalize=True, 
+  #                       magnify=0.1,
+  #                       )
+
+  figure_path = "/".join(train_dataset_path.split("/")[:-1]) + "/"
+
+  print(all_acc)
+  plt.plot(all_acc['train_acc'], label="Train Accuracy")
+  plt.plot(all_acc['val_acc'], label="Test Accuracy")
+  plt.xlabel("Epoch")
+  plt.ylabel("Train/Test Accuracy")
+  plt.title("Train/Test Accuracy: 5-Bit Features")
+  plt.legend()
+  plt.grid()
+  plt.savefig(figure_path + "/plot_accuracy_num_epochs_" + str(epochs) + ".png")
+
+  print(all_loss)
+  plt.plot(all_loss['train_loss'], label="Train Loss")
+  plt.plot(all_loss['val_loss'], label="Test Loss")
+  plt.title("Train/Test Loss: 5-Bit Features")
+  plt.xlabel("Epoch")
+  plt.ylabel("Training Loss")
+  plt.legend()
+  plt.grid()
+  plt.savefig(figure_path + "/plot_loss_num_epochs_" + str(epochs) + ".png")
