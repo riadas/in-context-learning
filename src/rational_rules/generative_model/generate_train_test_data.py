@@ -24,7 +24,7 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
   while len(formulas) != num_formulas:
     formula = gen_DNF(feature_dim)
     if min_clauses != -1: # ensure that formula has minimum number of non-constant clauses
-      while (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses)): # or num_non_constant_clauses(formula) > 5)
+      while (formula in formulas) or (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses)): # or num_non_constant_clauses(formula) > 5)
         formula = gen_DNF(feature_dim)
 
     labeled_vectors = []
@@ -139,7 +139,7 @@ def gen_train_and_test_data_for_classifier(train_val_test_split, num_formulas, n
   val_formulas = formulas[train_size:train_size + val_size]
 
   # train/val files
-  data_dir = "../data/classification/params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
+  data_dir = "../data/classification/distinct_formulas/params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
   if not os.path.isdir(data_dir):
     os.mkdir(data_dir)
 
