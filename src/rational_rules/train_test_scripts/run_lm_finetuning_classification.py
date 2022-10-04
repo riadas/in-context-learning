@@ -17,9 +17,9 @@ from transformers import (set_seed,
 import matplotlib.pyplot as plt
 
 # train/test data paths
-train_dataset_path = sys.argv[0]
-test_dataset_path = sys.argv[1]
-epochs = int(sys.argv[2])
+train_dataset_path = sys.argv[1]
+test_dataset_path = sys.argv[2]
+epochs = int(sys.argv[3])
 
 # Set seed for reproducibility.
 set_seed(123)
