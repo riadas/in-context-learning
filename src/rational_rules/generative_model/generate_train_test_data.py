@@ -120,16 +120,21 @@ def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, 
     os.mkdir(data_dir)
     
   with open(data_dir + "/training_data.txt", "w+") as train_file:
+    new_lines = []
     for prompt in train_prompts:
       line = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
       new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")      
-      train_file.write(new_line)
+      new_lines.append(new_line)
+      print("line: " + line)
+      print("new_line: " + new_line)    
+    train_file.write("\n".join(new_lines))
 
   with open(data_dir + "/validation_data.txt", "w+") as train_file:
     for prompt in test_prompts:
       line = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
-      new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")
-      train_file.write(new_line) 
+      new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")      
+      new_lines.append(new_line)    
+    train_file.write("\n".join(new_lines))
 
   # formula files (for reference)
   with open(data_dir + "/training_formulas.txt", "w+") as train_file:
@@ -192,13 +197,28 @@ def gen_train_and_test_data_for_classifier(train_val_test_split, num_formulas, n
   #     formatted_prompt = 
 
 
-with open("../data/text_generation/validation_data.txt", "r") as f:
-  text = f.read()
-  lines = list(filter(lambda x: x != "", text.split("\n")))
-  new_lines = []
-  for line in lines: 
-    new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")
-    new_lines.append(new_line)
-  with open("new_validation_data.txt", "w+") as g:
-    g.write("\n".join(new_lines))
-  
+file_paths = ["../data/text_generation/params_num_formulas_50000_num_bits_3_num_clauses_1_num_examples_5/",
+              "../data/text_generation/params_num_formulas_50000_num_bits_5_num_clauses_1_num_examples_5/",
+              "../data/text_generation/params_num_formulas_50000_num_bits_7_num_clauses_1_num_examples_5/",
+              "../data/text_generation/params_num_formulas_100000_num_bits_3_num_clauses_1_num_examples_5/",
+              "../data/text_generation/params_num_formulas_100000_num_bits_5_num_clauses_1_num_examples_5/",
+              "../data/text_generation/params_num_formulas_100000_num_bits_7_num_clauses_1_num_examples_5/",
+              "../data/text_generation/params_num_formulas_100000_num_bits_3_num_clauses_1_num_examples_6/",
+              "../data/text_generation/params_num_formulas_100000_num_bits_5_num_clauses_1_num_examples_8/",
+]
+
+file_names = ["training_data.txt", "validation_data.txt"]
+
+for file_path in file_paths:
+  for file_name in file_names:
+    path = file_path + file_name
+    with open(path, "r+") as f:
+      text = f.read()
+      lines = list(filter(lambda x: x != "", text.split("\n")))
+      new_lines = []
+      for line in lines: 
+        new_line = line.replace("  ", " ") # " " + line.replace("], True", "]: True").replace("], False", "]: False").replace(",False", ": False").replace(",True", ": True")
+        new_lines.append(new_line)
+      f.seek(0)
+      f.write("\n".join(new_lines))
+      f.truncate()
