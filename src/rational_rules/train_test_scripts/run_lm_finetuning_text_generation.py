@@ -26,7 +26,7 @@ train_dataset_path = sys.argv[1]
 test_dataset_path = sys.argv[2]
 epochs = int(sys.argv[3])
 
-num_bits = int(train_dataset_path.split("num_bits_")[:-1][1])
+num_bits = int(train_dataset_path.split("num_bits_")[-1][0])
 
 with open(train_dataset_path, "r") as f:
   all_sentences = list(filter(lambda x: x != "", f.read().split("\n")))
