@@ -186,7 +186,7 @@ test_losses = []
 train_accuracy, weird_train_outputs = eval_on_test_data(all_sentences)
 print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
 
-test_accuracy, weird_test_outputs = eval_on_test_data(all_sentences)
+test_accuracy, weird_test_outputs = eval_on_test_data(test_sentences)
 print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
 
 train_accuracies.append(train_accuracy)
@@ -198,7 +198,7 @@ for i in range(epochs):
   train_accuracy, weird_train_outputs = eval_on_test_data(all_sentences)
   print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
 
-  test_accuracy, weird_test_outputs = eval_on_test_data(all_sentences)
+  test_accuracy, weird_test_outputs = eval_on_test_data(test_sentences)
   print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
 
   train_accuracies.append(train_accuracy)
