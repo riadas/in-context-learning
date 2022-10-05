@@ -24,7 +24,7 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
   while len(formulas) != num_formulas:
     formula = gen_DNF(feature_dim)
     if min_clauses != -1: # ensure that formula has minimum number of non-constant clauses
-      while (formula in formulas) or (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses)): # or num_non_constant_clauses(formula) > 5)
+      while (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses)): # or num_non_constant_clauses(formula) > 5)
         formula = gen_DNF(feature_dim)
 
     labeled_vectors = []
@@ -73,9 +73,9 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
     labeled_vectors.append(query)
 
     prompt = (labeled_vectors, query_label)
-    if not prompts in prompts:
-      prompts.append(prompt)
-      formulas.append(formula)
+    # if not prompts in prompts:
+    prompts.append(prompt)
+    formulas.append(formula)
 
     if len(formulas) % 500 == 0:
       print("num formulas: "+str(len(formulas)))
@@ -104,22 +104,41 @@ def format_label(label, dim):
   #   return [0, 1]
 
 def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False):
-  _, prompts = gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses, mixed_pos_and_neg, format_labels)
+  formulas, prompts = gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses, mixed_pos_and_neg, format_labels)
 
   train_size = int(num_formulas * train_split)
 
   train_prompts = prompts[:train_size]
   test_prompts = prompts[train_size:]
 
-  with open("../data/text_generation/training_data.txt", "w+") as train_file:
-    for prompt in train_prompts:
-      formatted_prompt = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
-      train_file.write(formatted_prompt)
+  train_formulas = formulas[:train_size]
+  test_formulas = formulas[train_size:]
 
-  with open("../data/text_generation/validation_data.txt", "w+") as train_file:
+
+  data_dir = "../data/text_generation/params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
+  if not os.path.isdir(data_dir):
+    os.mkdir(data_dir)
+    
+  with open(data_dir + "/training_data.txt", "w+") as train_file:
+    for prompt in train_prompts:
+      line = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
+      new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")      
+      train_file.write(new_line)
+
+  with open(data_dir + "/validation_data.txt", "w+") as train_file:
     for prompt in test_prompts:
-      formatted_prompt = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
-      train_file.write(formatted_prompt) 
+      line = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
+      new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")
+      train_file.write(new_line) 
+
+  # formula files (for reference)
+  with open(data_dir + "/training_formulas.txt", "w+") as train_file:
+    for formula in train_formulas:
+      train_file.write(formula + "\n")
+
+  with open(data_dir + "/validation_formulas.txt", "w+") as val_file:
+    for formula in test_formulas:
+      val_file.write(formula + "\n")
 
 
 def gen_train_and_test_data_for_classifier(train_val_test_split, num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False):
@@ -171,3 +190,15 @@ def gen_train_and_test_data_for_classifier(train_val_test_split, num_formulas, n
   # with open("../data/test_data.txt", "w+") as test_file:
   #   for prompt in test_prompts:
   #     formatted_prompt = 
+
+
+with open("../data/text_generation/validation_data.txt", "r") as f:
+  text = f.read()
+  lines = list(filter(lambda x: x != "", text.split("\n")))
+  new_lines = []
+  for line in lines: 
+    new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")
+    new_lines.append(new_line)
+  with open("new_validation_data.txt", "w+") as g:
+    g.write("\n".join(new_lines))
+  
