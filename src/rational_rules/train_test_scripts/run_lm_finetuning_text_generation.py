@@ -220,7 +220,7 @@ plt.title("Train/Test Accuracy: " + str(num_bits) + "-Bit Features")
 plt.legend()
 plt.grid()
 plt.savefig(figure_path + "/plot_accuracy_num_epochs_" + str(epochs) + ".png")
-plt.show()
+plt.clf()
 
 print(all_loss)
 plt.plot(all_loss['train_loss'], label="Train Loss")

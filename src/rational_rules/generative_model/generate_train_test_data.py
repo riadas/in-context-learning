@@ -21,7 +21,10 @@ Output: list of formulas and corresponding list of prompts + query labels
 def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False):
   formulas = []
   prompts = []
+  # num_vectors_per_formula = random.sample(list(range(4, 8)), 1)[0]
+  # mixed_pos_and_neg = (num_vectors_per_formula - 2, 2)
   while len(formulas) != num_formulas:
+    # feature_dim = random.sample(list(range(3, 8)), 1)[0]
     formula = gen_DNF(feature_dim)
     if min_clauses != -1: # ensure that formula has minimum number of non-constant clauses
       while (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses)): # or num_non_constant_clauses(formula) > 5)
@@ -197,28 +200,28 @@ def gen_train_and_test_data_for_classifier(train_val_test_split, num_formulas, n
   #     formatted_prompt = 
 
 
-file_paths = ["../data/text_generation/params_num_formulas_50000_num_bits_3_num_clauses_1_num_examples_5/",
-              "../data/text_generation/params_num_formulas_50000_num_bits_5_num_clauses_1_num_examples_5/",
-              "../data/text_generation/params_num_formulas_50000_num_bits_7_num_clauses_1_num_examples_5/",
-              "../data/text_generation/params_num_formulas_100000_num_bits_3_num_clauses_1_num_examples_5/",
-              "../data/text_generation/params_num_formulas_100000_num_bits_5_num_clauses_1_num_examples_5/",
-              "../data/text_generation/params_num_formulas_100000_num_bits_7_num_clauses_1_num_examples_5/",
-              "../data/text_generation/params_num_formulas_100000_num_bits_3_num_clauses_1_num_examples_6/",
-              "../data/text_generation/params_num_formulas_100000_num_bits_5_num_clauses_1_num_examples_8/",
-]
+# file_paths = ["../data/text_generation/params_num_formulas_50000_num_bits_3_num_clauses_1_num_examples_5/",
+#               "../data/text_generation/params_num_formulas_50000_num_bits_5_num_clauses_1_num_examples_5/",
+#               "../data/text_generation/params_num_formulas_50000_num_bits_7_num_clauses_1_num_examples_5/",
+#               "../data/text_generation/params_num_formulas_100000_num_bits_3_num_clauses_1_num_examples_5/",
+#               "../data/text_generation/params_num_formulas_100000_num_bits_5_num_clauses_1_num_examples_5/",
+#               "../data/text_generation/params_num_formulas_100000_num_bits_7_num_clauses_1_num_examples_5/",
+#               "../data/text_generation/params_num_formulas_100000_num_bits_3_num_clauses_1_num_examples_6/",
+#               "../data/text_generation/params_num_formulas_100000_num_bits_5_num_clauses_1_num_examples_8/",
+# ]
 
-file_names = ["training_data.txt", "validation_data.txt"]
+# file_names = ["training_data.txt", "validation_data.txt"]
 
-for file_path in file_paths:
-  for file_name in file_names:
-    path = file_path + file_name
-    with open(path, "r+") as f:
-      text = f.read()
-      lines = list(filter(lambda x: x != "", text.split("\n")))
-      new_lines = []
-      for line in lines: 
-        new_line = line.replace("  ", " ") # " " + line.replace("], True", "]: True").replace("], False", "]: False").replace(",False", ": False").replace(",True", ": True")
-        new_lines.append(new_line)
-      f.seek(0)
-      f.write("\n".join(new_lines))
-      f.truncate()
+# for file_path in file_paths:
+#   for file_name in file_names:
+#     path = file_path + file_name
+#     with open(path, "r+") as f:
+#       text = f.read()
+#       lines = list(filter(lambda x: x != "", text.split("\n")))
+#       new_lines = []
+#       for line in lines: 
+#         new_line = line.replace("  ", " ") # " " + line.replace("], True", "]: True").replace("], False", "]: False").replace(",False", ": False").replace(",True", ": True")
+#         new_lines.append(new_line)
+#       f.seek(0)
+#       f.write("\n".join(new_lines))
+#       f.truncate()
