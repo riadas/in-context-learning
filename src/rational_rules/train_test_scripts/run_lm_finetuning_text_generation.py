@@ -29,10 +29,10 @@ epochs = int(sys.argv[3])
 num_bits = int(train_dataset_path.split("num_bits_")[-1][0])
 
 with open(train_dataset_path, "r") as f:
-  all_sentences = list(filter(lambda x: x != "", f.read().split("\n")))
+  all_sentences = list(filter(lambda x: len(x) > 5, f.read().split("\n")))
 
 with open(test_dataset_path, "r") as f:
-  test_sentences = list(filter(lambda x: x != "", f.read().split("\n")))
+  test_sentences = list(filter(lambda x: len(x) > 5, f.read().split("\n")))
 
 all_sentences = all_sentences + test_sentences
 
