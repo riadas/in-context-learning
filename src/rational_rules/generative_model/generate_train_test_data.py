@@ -18,7 +18,7 @@ Output: list of formulas and corresponding list of prompts + query labels
                                                      min_clauses=1,
                                                      mixed_pos_and_neg=(3,2))
 '''
-def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False):
+def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False, error_prob=0):
   formulas = []
   prompts = []
   # num_vectors_per_formula = random.sample(list(range(4, 8)), 1)[0]
@@ -61,6 +61,12 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
     for v in sampled_vectors:
       labeled_vectors.append(v)
       label = execute(formula, v)
+
+      if error_prob != 0:
+        p = random.uniform(0, 1)
+        if p < error_prob:
+          label = not label
+
       if format_labels:
         label = format_label(label, feature_dim)
       labeled_vectors.append(label)

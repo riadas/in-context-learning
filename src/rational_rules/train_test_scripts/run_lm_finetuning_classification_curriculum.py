@@ -406,10 +406,10 @@ if __name__ == "__main__":
                                                             max_sequence_len=max_length)
 
 
-  print('Dealing with Train...')
   for i in range(train_dataset_paths):
     print("Curriculum dataset " + str(i + 1) + "/" + str(len(train_dataset_paths)))
 
+    print('Dealing with Train...')
     # Create pytorch dataset.
     train_dataset = RationalRulesDataset(path=train_dataset_paths[:i+1], 
                                   use_tokenizer=tokenizer)
