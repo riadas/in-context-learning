@@ -1,0 +1,2 @@
+(((x[4] == 1) and True) or False)
+(((x[2] == 0) and ((x[3] == 0) and ((x[0] == 1) and ((x[1] == 1) and True)))) or False)
