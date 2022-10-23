@@ -25,7 +25,7 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
   # mixed_pos_and_neg = (num_vectors_per_formula - 2, 2)
   while len(formulas) != num_formulas:
     if feature_dim_unused == "mixed":
-      feature_dim = random.sample(list(range(3, 8)), 1)[0]
+      feature_dim = random.sample(list(range(4, 8)), 1)[0]
     else:
       feature_dim = feature_dim_unused
 

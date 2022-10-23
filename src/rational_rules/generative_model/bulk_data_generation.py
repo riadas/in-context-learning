@@ -21,7 +21,7 @@ elif num_examples_mode == 2:
     num_examples = 8
   elif num_bits == 7:
     num_examples = 8
-  else:
+  elif num_bits == "mixed":
     num_examples = 8
 
 mixed_pos_and_neg = (num_examples - 2, 2)
