@@ -24,7 +24,11 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
   # num_vectors_per_formula = random.sample(list(range(4, 8)), 1)[0]
   # mixed_pos_and_neg = (num_vectors_per_formula - 2, 2)
   while len(formulas) != num_formulas:
-    feature_dim = random.sample(list(range(3, 8)), 1)[0]
+    if feature_dim_unused == "mixed":
+      feature_dim = random.sample(list(range(3, 8)), 1)[0]
+    else:
+      feature_dim = feature_dim_unused
+
     formula = gen_DNF(feature_dim)
     if min_clauses != -1: # ensure that formula has minimum number of non-constant clauses
       while (False if min_clauses == -1 else (num_non_constant_clauses(formula) < min_clauses)): # or num_non_constant_clauses(formula) > 5)
@@ -123,13 +127,11 @@ def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, 
   train_formulas = formulas[:train_size]
   test_formulas = formulas[train_size:]
 
-  if error_prob == 0:
-    data_dir = "../data/text_generation/mixed_bit_params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
-  else:
-    data_dir = "../data/text_generation/ERROR_PROB=" + str(error_prob)
-    if not os.path.isdir():
-      os.mkdir(data_dir)
-    data_dir = data_dir + "/params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
+  data_dir = "../data/text_generation/ERROR_PROB_" + str(error_prob)
+  if not os.path.isdir(data_dir):
+    os.mkdir(data_dir)
+  data_dir = data_dir + "/params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
+
   if not os.path.isdir(data_dir):
     os.mkdir(data_dir)
     
