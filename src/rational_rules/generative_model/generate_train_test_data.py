@@ -112,8 +112,8 @@ def format_label(label, dim):
   # else:
   #   return [0, 1]
 
-def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False):
-  formulas, prompts = gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses, mixed_pos_and_neg, format_labels)
+def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, feature_dim, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False, error_prob=0):
+  formulas, prompts = gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim, min_clauses, mixed_pos_and_neg, format_labels, error_prob)
 
   train_size = int(num_formulas * train_split)
 
@@ -123,8 +123,13 @@ def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, 
   train_formulas = formulas[:train_size]
   test_formulas = formulas[train_size:]
 
-
-  data_dir = "../data/text_generation/mixed_bit_params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
+  if error_prob == 0:
+    data_dir = "../data/text_generation/mixed_bit_params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
+  else:
+    data_dir = "../data/text_generation/ERROR_PROB=" + str(error_prob)
+    if not os.path.isdir():
+      os.mkdir(data_dir)
+    data_dir = data_dir + "/params_num_formulas_" + str(num_formulas) + "_num_bits_" + str(feature_dim) + "_num_clauses_" + str(min_clauses) + "_num_examples_" + str(num_vectors_per_formula)
   if not os.path.isdir(data_dir):
     os.mkdir(data_dir)
     
@@ -206,24 +211,24 @@ def gen_train_and_test_data_for_classifier(train_val_test_split, num_formulas, n
   #     formatted_prompt = 
 
 
-file_paths = [
-              "../data/text_generation/old_mixed_examples_params_num_formulas_50000_num_bits_7_num_clauses_1_num_examples_5/",
-]
+# file_paths = [
+#               "../data/text_generation/old_mixed_examples_params_num_formulas_50000_num_bits_7_num_clauses_1_num_examples_5/",
+# ]
 
-file_names = ["training_data.txt", "validation_data.txt"]
+# file_names = ["training_data.txt", "validation_data.txt"]
 
-for file_path in file_paths:
-  print(file_path)
-  for file_name in file_names:
-    path = file_path + file_name
-    with open(path, "r+") as f:
-      text = f.read()
-      lines = list(filter(lambda x: x != "", text.split("\n")))
-      new_lines = []
-      for line in lines: 
-        new_line = line.replace("], True", "]: True").replace("], False", "]: False").replace(",False", ": False").replace(",True", ": True")
-        new_lines.append(new_line)
-      f.seek(0)
-      f.write("\n".join(new_lines))
-      f.truncate()
+# for file_path in file_paths:
+#   print(file_path)
+#   for file_name in file_names:
+#     path = file_path + file_name
+#     with open(path, "r+") as f:
+#       text = f.read()
+#       lines = list(filter(lambda x: x != "", text.split("\n")))
+#       new_lines = []
+#       for line in lines: 
+#         new_line = line.replace("], True", "]: True").replace("], False", "]: False").replace(",False", ": False").replace(",True", ": True")
+#         new_lines.append(new_line)
+#       f.seek(0)
+#       f.write("\n".join(new_lines))
+#       f.truncate()
 

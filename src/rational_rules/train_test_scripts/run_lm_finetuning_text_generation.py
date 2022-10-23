@@ -126,7 +126,7 @@ def eval_on_test_data(test_sentences):
         num_correct += 1
       elif not prediction in ["True", "False"]:
         weird_outputs.add(prediction)
-      total += num_correct/len(formatted_partial_sentences)
+    total += num_correct/len(formatted_partial_sentences)
 
   return total/len(test_sentences), weird_outputs
 
