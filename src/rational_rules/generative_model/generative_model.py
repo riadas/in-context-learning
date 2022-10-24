@@ -16,6 +16,10 @@ def execute(formula, input):
 def unprettify(formula):
   return formula.replace("(x)", "]").replace("f_", "x[").replace("∧", "and").replace("∨", "or")
 
+'''Convert Python formatting to math formatting'''
+def prettify(formula, change_and_or=True):
+  return formula.replace("]", "(x)").replace("x[", "f_").replace("and", "∧" if change_and_or else "and").replace("or", "∨" if change_and_or else "or")
+
 # ----- GENERATIVE MODEL: GENERATE FORMULAS + INPUTS -----
 
 '''Generate DNF formula according to Rational Rules (RR) CFG, where input feature vectors have length num_features'''
