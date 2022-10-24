@@ -1,4 +1,4 @@
-from generative_model import execute, gen_DNF, gen_input, num_non_constant_clauses
+from generative_model import execute, gen_DNF, gen_input, num_non_constant_clauses, prettify
 import random 
 import os
 '''
@@ -18,7 +18,7 @@ Output: list of formulas and corresponding list of prompts + query labels
                                                      min_clauses=1,
                                                      mixed_pos_and_neg=(3,2))
 '''
-def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim_unused, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False, error_prob=0):
+def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, feature_dim_unused, min_clauses=-1, mixed_pos_and_neg=None, format_labels=False, error_prob=0, hypothesis_generation=False):
   formulas = []
   prompts = []
   # num_vectors_per_formula = random.sample(list(range(4, 8)), 1)[0]
@@ -74,6 +74,11 @@ def gen_feature_vectors_and_labels(num_formulas, num_vectors_per_formula, featur
       if format_labels:
         label = format_label(label, feature_dim)
       labeled_vectors.append(label)
+
+    if hypothesis_generation:
+      formatted_formula = "hyp: " + prettify(formula, change_and_or=True)
+      index = random.sample(list(range(2, len(labeled_vectors) - 1, 2)), 1)[0]
+      labeled_vectors = labeled_vectors[0:index] + [formatted_formula] + labeled_vectors[index:]
 
     # generate query that has not appeared in labeled_vectors 
     unseen_ints = list(filter(lambda i: not int_to_bit_vector(i, feature_dim) in sampled_vectors, range(2**feature_dim)))
@@ -139,7 +144,7 @@ def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, 
     new_lines = []
     for prompt in train_prompts:
       line = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
-      new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")      
+      new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1,", "[ 1,").replace("[0,", "[ 0,")      
       new_lines.append(new_line)
       print("line: " + line)
       print("new_line: " + new_line)    

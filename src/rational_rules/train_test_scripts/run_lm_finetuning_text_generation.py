@@ -105,7 +105,7 @@ def eval_on_test_data(test_sentences):
       print("evaluating test sentence " + str(i))
     full_sentence = test_sentences[i] # [ 1, 0, 0, 0, 1]: True, [ 0, 1, 0, 0, 1]: True, [ 0, 1, 0, 0, 0]: True, [ 1, 1, 0, 1, 0]: True, [ 1, 0, 1, 1, 1]: True, [ 1, 1, 0, 1, 1]: True
     split_full_sentence = list(map(lambda s : s if s[-1] == "e" else s + "e", full_sentence.split("e,")))
-    formatted_partial_sentences = list(map(lambda i: ",".join(split_full_sentence[0: i + 1]), range(len(split_full_sentence))))
+    formatted_partial_sentences = list(map(lambda i: ",".join(split_full_sentence[0: i + 1]), range(len(split_full_sentence))))[1:]
     num_correct = 0
     for sentence in formatted_partial_sentences:
       prompt = ":".join(sentence.split(":")[:-1]) + ":"
