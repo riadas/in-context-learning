@@ -83,8 +83,8 @@ print("val_size   :",val_size)
 
 gc.collect() 
 
-train_dataloader = DataLoader(train_set,  sampler = RandomSampler(train_set), batch_size = 32)
-validation_dataloader = DataLoader(val_set, sampler = SequentialSampler(val_set), batch_size = 32 )
+train_dataloader = DataLoader(train_set,  sampler = RandomSampler(train_set), batch_size = 16)
+validation_dataloader = DataLoader(val_set, sampler = SequentialSampler(val_set), batch_size = 16 )
 
 # Create default config
 configuration = GPT2Config.from_pretrained('gpt2', output_hidden_states=False)
