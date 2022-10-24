@@ -229,7 +229,7 @@ if accuracy_mode == "binary":
 
   test_accuracy, weird_test_outputs = eval_on_test_data(test_sentences)
   print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
-elif accuracy_mode == "partial"
+elif accuracy_mode == "partial":
   train_accuracy, weird_train_outputs = eval_on_test_data_partial(all_sentences)
   print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
 
@@ -249,7 +249,7 @@ for i in range(epochs):
 
     test_accuracy, weird_test_outputs = eval_on_test_data(test_sentences)
     print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
-  elif accuracy_mode == "partial"
+  elif accuracy_mode == "partial":
     train_accuracy, weird_train_outputs = eval_on_test_data_partial(all_sentences)
     print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
 
