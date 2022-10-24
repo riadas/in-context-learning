@@ -151,6 +151,7 @@ def gen_train_and_test_data(train_split, num_formulas, num_vectors_per_formula, 
     train_file.write("\n".join(new_lines))
 
   with open(data_dir + "/validation_data.txt", "w+") as train_file:
+    new_lines = []
     for prompt in test_prompts:
       line = str(prompt[0])[1:-1] + "," + str(prompt[1]) + "\n"
       new_line = " " + line.replace("], 1", "]: True").replace("], 0", "]: False").replace(",0", ": False").replace(",1", ": True").replace("[1", "[ 1").replace("[0", "[ 0")      

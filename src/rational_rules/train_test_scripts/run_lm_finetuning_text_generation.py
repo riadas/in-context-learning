@@ -25,18 +25,21 @@ gc.collect()
 train_dataset_path = sys.argv[1]
 test_dataset_path = sys.argv[2]
 epochs = int(sys.argv[3])
+accuracy_mode = sys.argv[4] # binary segmented
 
 num_bits = train_dataset_path.split("num_bits_")[-1][0]
 if num_bits != "m":
   num_bits = int(num_bits)
 
 with open(train_dataset_path, "r") as f:
-  all_sentences = list(filter(lambda x: len(x) > 5, f.read().split("\n")))
+  train_sentences = list(filter(lambda x: len(x) > 5, f.read().split("\n")))
 
 with open(test_dataset_path, "r") as f:
   test_sentences = list(filter(lambda x: len(x) > 5, f.read().split("\n")))
 
-all_sentences = all_sentences + test_sentences
+all_sentences = train_sentences
+if len(test_sentences) > len(train_sentences):
+  test_sentences = test_sentences[len(train_sentences):]
 
 max_len = max([len(tokenizer.encode(s)) for s in all_sentences])
 print(f"max_len {max_len}")
@@ -97,7 +100,7 @@ model.cuda()
 optimizer = torch.optim.Adam(model.parameters(),lr = 0.0005)
 model = model.to(device)
 
-def eval_on_test_data(test_sentences):
+def eval_on_test_data_partial(test_sentences):
   total = 0
   weird_outputs = set()
   for i in range(len(test_sentences)):
@@ -131,6 +134,35 @@ def eval_on_test_data(test_sentences):
     total += num_correct/len(formatted_partial_sentences)
 
   return total/len(test_sentences), weird_outputs
+
+def eval_on_test_data(test_sentences):
+  num_correct = 0
+  weird_outputs = set()
+  for i in range(len(test_sentences)):
+    if i % 1000 == 0:
+      print("evaluating test sentence " + str(i))
+    sentence = test_sentences[i]
+    prompt = ":".join(sentence.split(":")[:-1]) + ":"
+    answer = sentence.split(":")[-1].replace(" ", "")
+    input_seq = prompt
+    generated = torch.tensor(tokenizer.encode(input_seq)).unsqueeze(0)
+    generated = generated.to(device)
+    sample_outputs = model.generate(
+                                generated, 
+                                do_sample=False,   
+                                max_new_tokens = 1,
+                                num_return_sequences=1,
+                                pad_token_id=50256,
+                                )
+
+    prediction = tokenizer.decode(sample_outputs[0], skip_special_tokens=True).split(":")[-1].replace(" ", "")
+    # print("prediction: " + prediction)
+    # print("answer: " + answer)
+    if prediction == answer:
+      num_correct += 1
+    elif not prediction in ["True", "False"]:
+      weird_outputs.add(prediction)
+  return num_correct/len(test_sentences), weird_outputs
 
   #call model with a batch of input
 def process_one_batch(batch):
@@ -191,11 +223,18 @@ test_losses = []
 
 # TRAINING
 
-train_accuracy, weird_train_outputs = eval_on_test_data(all_sentences)
-print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
+if accuracy_mode == "binary":
+  train_accuracy, weird_train_outputs = eval_on_test_data(all_sentences)
+  print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
 
-test_accuracy, weird_test_outputs = eval_on_test_data(test_sentences)
-print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+  test_accuracy, weird_test_outputs = eval_on_test_data(test_sentences)
+  print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+elif accuracy_mode == "partial"
+  train_accuracy, weird_train_outputs = eval_on_test_data_partial(all_sentences)
+  print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
+
+  test_accuracy, weird_test_outputs = eval_on_test_data_partial(test_sentences)
+  print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
 
 train_accuracies.append(train_accuracy)
 test_accuracies.append(test_accuracy)
@@ -203,11 +242,19 @@ for i in range(epochs):
   print("EPOCH " + str(i))
   train_loss = train_epoch()
   test_loss = eval_epoch()
-  train_accuracy, weird_train_outputs = eval_on_test_data(all_sentences)
-  print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
 
-  test_accuracy, weird_test_outputs = eval_on_test_data(test_sentences)
-  print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+  if accuracy_mode == "binary":
+    train_accuracy, weird_train_outputs = eval_on_test_data(all_sentences)
+    print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
+
+    test_accuracy, weird_test_outputs = eval_on_test_data(test_sentences)
+    print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+  elif accuracy_mode == "partial"
+    train_accuracy, weird_train_outputs = eval_on_test_data_partial(all_sentences)
+    print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
+
+    test_accuracy, weird_test_outputs = eval_on_test_data_partial(test_sentences)
+    print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
 
   train_accuracies.append(train_accuracy)
   test_accuracies.append(test_accuracy)
