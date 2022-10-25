@@ -1,0 +1,40 @@
+ [ 1, 0, 0]: True, [ 0, 1, (((x[1] == 0) and True) or False), 0]: False, [ 0, 1, 1]: False, [ 0, 0, 0]: True, [ 0, 0, 1]: True, [ 1, 0, 1]: True
+ [ 1, 0, 1]: False, [ 0, 1, 0]: True, [ 1, 1, 1]: True, (((x[1] == 1) and True) or (((x[2] == 1) and ((x[2] == 0) and True)) or False)), [ 0, 0, 1]: False, [ 1, 1, 0]: True, [ 1, 0, 0]: False
+ [ 0, 1, 0]: False, [ 1, 0, 1]: False, [ 1, 1, 1]: True, [ 0, 1, 1]: False, (((x[0] == 1) and ((x[1] == 1) and True)) or False), [ 1, 1, 0]: True, [ 0, 0, 0]: False
+ [ 1, 0, 0]: True, [ 1, 0, 1]: False, [ 0, 1, 1]: False, [ 1, 1, 0]: True, [ 0, 1, 0]: True, [ 1, 1, (((x[2] == 0) and True) or False), 1]: False
+ [ 1, 0, 0]: False, [ 1, 1, 1]: False, [ 1, 1, 0]: False, [ 0, (((x[2] == 1) and ((x[0] == 0) and ((x[2] == 1) and ((x[1] == 1) and True)))) or False), 1, 1]: True, [ 1, 0, 1]: False, [ 0, 0, 0]: False
+ [ 1, 1, 1]: False, [ 0, 0, 0]: True, [ 0, 1, 1]: False, [ 0, (((x[0] == 0) and ((x[0] == 0) and ((x[2] == 0) and True))) or False), 0, 1]: False, [ 0, 1, 0]: True, [ 1, 0, 0]: False
+ [ 1, 0, (((x[0] == 1) and ((x[0] == 1) and True)) or False), 1]: True, [ 1, 1, 1]: True, [ 1, 1, 0]: True, [ 0, 1, 0]: False, [ 0, 1, 1]: False, [ 0, 0, 1]: False
+ [ 0, 0, 1]: True, (((x[1] == 0) and True) or False), [ 0, 0, 0]: True, [ 0, 1, 1]: False, [ 1, 1, 1]: False, [ 1, 0, 0]: True, [ 1, 1, 0]: False
+ [ 1, (((x[2] == 1) and True) or (((x[0] == 0) and ((x[0] == 1) and ((x[1] == 0) and True))) or (((x[1] == 0) and True) or False))), 0, 0]: True, [ 0, 0, 1]: True, [ 0, 0, 0]: True, [ 0, 1, 0]: False, [ 1, 1, 0]: False, [ 0, 1, 1]: True
+ [ 0, 0, (((x[2] == 1) and True) or False), 1]: True, [ 1, 0, 0]: False, [ 0, 0, 0]: False, [ 1, 0, 1]: True, [ 0, 1, 1]: True, [ 0, 1, 0]: False
+ [ 1, 1, (((x[0] == 0) and ((x[2] == 0) and ((x[0] == 0) and True))) or False), 0]: False, [ 0, 0, 0]: True, [ 0, 0, 1]: False, [ 1, 0, 0]: False, [ 0, 1, 0]: True, [ 0, 1, 1]: False
+ [ 1, 1, 1]: True, [ 1, 1, (((x[2] == 1) and True) or False), 0]: False, [ 1, 0, 1]: True, [ 0, 1, 0]: False, [ 0, 0, 1]: True, [ 0, 1, 1]: True
+ [ 1, 0, (((x[0] == 1) and True) or (((x[2] == 0) and ((x[0] == 1) and ((x[0] == 0) and ((x[1] == 0) and ((x[2] == 1) and ((x[2] == 0) and True)))))) or False)), 1]: True, [ 1, 1, 0]: True, [ 0, 0, 1]: False, [ 0, 1, 0]: False, [ 1, 1, 1]: True, [ 1, 0, 0]: True
+ [ 0, 0, 1]: False, [ 1, 1, 1]: True, [ 0, 0, (((x[2] == 1) and ((x[0] == 1) and ((x[0] == 1) and True))) or False), 0]: False, [ 0, 1, 1]: False, [ 1, 0, 1]: True, [ 0, 1, 0]: False
+ [ 0, 1, 1]: True, [ 1, 0, 1]: False, [ 0, 0, 1]: True, [ 0, 0, (((x[0] == 0) and True) or (((x[1] == 0) and ((x[2] == 0) and ((x[0] == 0) and ((x[0] == 1) and ((x[2] == 0) and True))))) or False)), 0]: True, [ 1, 1, 0]: False, [ 1, 1, 1]: False
+ [ 0, 1, (((x[2] == 1) and ((x[2] == 1) and True)) or False), 1]: True, [ 0, 0, 0]: False, [ 1, 0, 0]: False, [ 1, 1, 1]: True, [ 0, 0, 1]: True, [ 1, 1, 0]: False
+ [ 0, 1, 0]: False, [ 0, 1, 1]: False, (((x[1] == 0) and ((x[0] == 0) and ((x[1] == 0) and True))) or False), [ 0, 0, 1]: True, [ 0, 0, 0]: True, [ 1, 1, 0]: False, [ 1, 1, 1]: False
+ [ 1, 0, 1]: False, [ 1, 0, 0]: True, (((x[2] == 0) and ((x[0] == 1) and True)) or False), [ 0, 1, 0]: False, [ 1, 1, 0]: True, [ 0, 0, 0]: False, [ 0, 0, 1]: False
+ [ 0, 1, 1]: True, [ 0, 0, 1]: True, [ 1, 1, 0]: False, [ 1, (((x[2] == 1) and True) or False), 1, 1]: True, [ 0, 0, 0]: False, [ 0, 1, 0]: False
+ [ 0, (((x[0] == 0) and True) or False), 0, 1]: True, [ 1, 0, 1]: False, [ 0, 1, 1]: True, [ 0, 1, 0]: True, [ 1, 1, 0]: False, [ 1, 1, 1]: False
+ [ 1, 0, 1]: True, [ 1, (((x[1] == 0) and True) or (((x[2] == 1) and True) or False)), 1, 0]: False, [ 0, 1, 0]: False, [ 0, 0, 0]: True, [ 0, 0, 1]: True, [ 0, 1, 1]: True
+ [ 0, 1, 1]: True, [ 1, 1, 0]: False, (((x[2] == 1) and ((x[1] == 1) and True)) or False), [ 0, 1, 0]: False, [ 0, 0, 0]: False, [ 1, 1, 1]: True, [ 1, 0, 1]: False
+ [ 0, 1, 1]: True, [ 1, (((x[0] == 0) and True) or False), 0, 1]: False, [ 0, 1, 0]: True, [ 0, 0, 0]: True, [ 1, 1, 0]: False, [ 0, 0, 1]: True
+ [ 1, 1, 0]: True, (((x[0] == 1) and True) or False), [ 1, 1, 1]: True, [ 0, 0, 1]: False, [ 0, 1, 1]: False, [ 1, 0, 1]: True, [ 1, 0, 0]: True
+ [ 0, 1, 1]: True, [ 1, 1, 0]: True, [ 1, 1, 1]: False, (((x[0] == 0) and True) or (((x[2] == 0) and True) or False)), [ 0, 0, 0]: True, [ 1, 0, 1]: False, [ 0, 1, 0]: True
+ [ 1, 1, 1]: True, [ 0, 1, (((x[1] == 1) and True) or False), 0]: True, [ 0, 1, 1]: True, [ 0, 0, 1]: False, [ 1, 0, 0]: False, [ 1, 0, 1]: False
+ [ 1, 1, 1]: False, [ 0, 1, 0]: True, [ 1, 0, (((x[1] == 1) and ((x[2] == 0) and True)) or False), 0]: False, [ 0, 1, 1]: False, [ 1, 1, 0]: True, [ 1, 0, 1]: False
+ [ 0, 0, 0]: False, [ 1, 1, 0]: False, [ 0, 0, 1]: True, [ 0, 1, 0]: False, [ 1, (((x[2] == 1) and ((x[1] == 0) and ((x[0] == 0) and ((x[0] == 0) and ((x[0] == 0) and ((x[0] == 0) and True)))))) or False), 0, 0]: False, [ 1, 1, 1]: False
+ [ 0, 1, 1]: True, [ 0, 0, 0]: False, [ 1, 0, 1]: False, (((x[2] == 1) and ((x[1] == 1) and True)) or False), [ 0, 0, 1]: False, [ 1, 1, 1]: True, [ 1, 1, 0]: False
+ [ 1, 1, 0]: True, (((x[2] == 0) and True) or False), [ 1, 1, 1]: False, [ 1, 0, 0]: True, [ 0, 1, 1]: False, [ 0, 0, 0]: True, [ 0, 0, 1]: False
+ [ 0, 0, 1]: True, [ 1, 0, 1]: True, [ 1, 1, 0]: False, (((x[1] == 0) and True) or False), [ 1, 1, 1]: False, [ 0, 0, 0]: True, [ 1, 0, 0]: True
+ [ 0, 0, 0]: False, [ 0, 1, 1]: True, [ 0, 0, 1]: False, [ 1, 0, 0]: False, [ 0, 1, 0]: True, (((x[1] == 1) and ((x[0] == 0) and ((x[1] == 1) and True))) or False), [ 1, 1, 0]: False
+ [ 0, 0, 0]: False, [ 1, 0, 0]: False, [ 1, 0, 1]: False, [ 0, 1, 1]: True, [ 0, 1, (((x[1] == 1) and ((x[0] == 0) and True)) or False), 0]: True, [ 0, 0, 1]: False
+ [ 1, 0, 1]: True, [ 0, 0, 0]: False, [ 0, 0, 1]: True, [ 1, 1, (((x[2] == 1) and True) or False), 0]: False, [ 0, 1, 1]: True, [ 1, 1, 1]: True
+ [ 0, 0, (((x[0] == 1) and True) or False), 1]: False, [ 0, 1, 0]: False, [ 1, 0, 0]: True, [ 1, 1, 0]: True, [ 1, 1, 1]: True, [ 0, 1, 1]: False
+ [ 0, 0, 1]: True, [ 1, 1, 1]: False, [ 1, 1, (((x[0] == 0) and True) or False), 0]: False, [ 0, 0, 0]: True, [ 0, 1, 1]: True, [ 1, 0, 0]: False
+ [ 1, (((x[1] == 1) and ((x[1] == 1) and True)) or False), 1, 1]: True, [ 1, 0, 1]: False, [ 1, 1, 0]: True, [ 0, 0, 1]: False, [ 0, 1, 0]: True, [ 0, 0, 0]: False
+ [ 0, (((x[0] == 0) and ((x[0] == 0) and True)) or False), 0, 1]: True, [ 0, 0, 0]: True, [ 0, 1, 0]: True, [ 1, 1, 1]: False, [ 1, 0, 1]: False, [ 1, 0, 0]: False
+ [ 1, 1, 1]: True, [ 1, 0, 1]: True, [ 0, (((x[2] == 1) and True) or False), 0, 1]: True, [ 1, 0, 0]: False, [ 1, 1, 0]: False, [ 0, 1, 1]: True
+ [ 0, 1, 1]: True, [ 0, 0, 1]: True, [ 1, 1, 1]: True, [ 1, 1, 0]: False, [ 0, (((x[2] == 1) and True) or False), 1, 0]: False, [ 1, 0, 1]: True
