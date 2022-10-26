@@ -49,10 +49,10 @@ with open(hyp_generation_training_data_path, "w") as f:
     else:
       pretty_formula = formula
 
-    prompts = sentence.split(", ")
-    index = random.sample(list(range(1, len(prompts))), 1)[0]
-    prompts = prompts[:index] + [pretty_formula] + prompts[index:]
-    formatted_prompt = ", ".join(prompts) + "\n"
+    prompts = sentence.split(", [")
+    index = random.sample(list(range(1, len(prompts), 1)), 1)[0]
+    prompts = prompts[:index] + ["hyp: " + pretty_formula] + prompts[index:]
+    formatted_prompt = (", [".join(prompts) + "\n").replace("[hyp", "hyp")
     f.write(formatted_prompt)
 
 with open(hyp_generation_validation_data_path, "w") as f:
@@ -67,8 +67,13 @@ with open(hyp_generation_validation_data_path, "w") as f:
     else:
       pretty_formula = formula
 
-    prompts = sentence.split(", ")
-    index = random.sample(list(range(1, len(prompts))), 1)[0]
-    prompts = prompts[:index] + [pretty_formula] + prompts[index:]
-    formatted_prompt = ", ".join(prompts) + "\n"
+    print(prompts)
+    prompts = sentence.split(", [")
+    index = random.sample(list(range(1, len(prompts), 1)), 1)[0]
+    prompts = prompts[:index] + ["hyp: " + pretty_formula] + prompts[index:]
+    formatted_prompt = (", [".join(prompts) + "\n").replace("[hyp", "hyp")
+    print(index)
+    print(prompts)
+    print(formatted_prompt)
+
     f.write(formatted_prompt)
