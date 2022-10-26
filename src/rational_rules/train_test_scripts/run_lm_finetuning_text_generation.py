@@ -29,7 +29,9 @@ accuracy_mode = sys.argv[4] # binary partial
 
 hypothesis_generation_file_path = "/".join(train_dataset_path.split("/")[:-1]) + "/validation_set_hypothesis.txt"
 
-num_bits = int(train_dataset_path.split("num_bits_")[-1][0])
+num_bits = train_dataset_path.split("num_bits_")[-1][0]
+if num_bits != "m":
+  num_bits = int(num_bits)
 
 with open(train_dataset_path, "r") as f:
   train_sentences = list(filter(lambda x: len(x) > 5, f.read().split("\n")))
@@ -83,8 +85,8 @@ print("val_size   :",val_size)
 
 gc.collect() 
 
-train_dataloader = DataLoader(train_set,  sampler = RandomSampler(train_set), batch_size = 32)
-validation_dataloader = DataLoader(val_set, sampler = SequentialSampler(val_set), batch_size = 32 )
+train_dataloader = DataLoader(train_set,  sampler = RandomSampler(train_set), batch_size = 16)
+validation_dataloader = DataLoader(val_set, sampler = SequentialSampler(val_set), batch_size = 16 )
 
 # Create default config
 configuration = GPT2Config.from_pretrained('gpt2', output_hidden_states=False)

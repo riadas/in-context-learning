@@ -1,9 +1,9 @@
 #!/bin/bash
 
 bits=(mixed) # 3 5 7 mixed 
-examples=(1 2) # 1 2 
-dataset_sizes=(50000 100000 200000) # 50000 100000 200000 
-error_probs=(0.05) # 0 0.01 0.05
+examples=(2) # 1 2 
+dataset_sizes=(200000) # 50000 100000 200000 
+error_probs=(0) # 0 0.01 0.05
 
 for bit in ${bits[@]}
 do

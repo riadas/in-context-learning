@@ -34,8 +34,8 @@ print("training_formulas length: " + str(len(training_formulas)))
 print("validation_sentences length: " + str(len(validation_sentences)))
 print("validation_formulas length: " + str(len(validation_formulas)))
 
-hyp_generation_training_data_path = existing_dataset_directory + "hyp_generation_training_data.txt"
-hyp_generation_validation_data_path = existing_dataset_directory + "hyp_generation_validation_data.txt"
+hyp_generation_training_data_path = existing_dataset_directory + "hyp_generation_training_data_mode " + pretty + ".txt"
+hyp_generation_validation_data_path = existing_dataset_directory + "hyp_generation_validation_data_mode " + pretty + ".txt"
 
 with open(hyp_generation_training_data_path, "w") as f:
   for i in range(len(training_sentences)):
