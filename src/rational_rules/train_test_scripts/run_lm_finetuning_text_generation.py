@@ -307,6 +307,12 @@ elif accuracy_mode == "partial":
 
   test_accuracy, weird_test_outputs = eval_on_test_data_partial(test_sentences)
   print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+elif accuracy_mode == "hyp":
+  train_accuracy, weird_train_outputs = eval_on_test_data_hyp_generation(all_sentences)
+  print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
+
+  test_accuracy, weird_test_outputs = eval_on_test_data_hyp_generation(test_sentences)
+  print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
 
 train_accuracies.append(train_accuracy)
 test_accuracies.append(test_accuracy)
@@ -327,6 +333,13 @@ for i in range(epochs):
 
     test_accuracy, weird_test_outputs = eval_on_test_data_partial(test_sentences)
     print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+  elif accuracy_mode == "hyp":
+    train_accuracy, weird_train_outputs = eval_on_test_data_hyp_generation(all_sentences)
+    print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
+
+    test_accuracy, weird_test_outputs = eval_on_test_data_hyp_generation(test_sentences)
+    print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+
 
   train_accuracies.append(train_accuracy)
   test_accuracies.append(test_accuracy)
