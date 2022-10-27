@@ -38,6 +38,7 @@ print("validation_formulas length: " + str(len(validation_formulas)))
 #hyp_generation_validation_data_path = existing_dataset_directory + "hyp_generation_validation_data_mode " + pretty + ".txt"
 
 
+
 for pretty in ["all", "missing-and-or", "none"]:
   hyp_generation_training_data_path = existing_dataset_directory + "hyp_generation_training_data_mode " + pretty + ".txt"
   hyp_generation_validation_data_path = existing_dataset_directory + "hyp_generation_validation_data_mode " + pretty + ".txt"
