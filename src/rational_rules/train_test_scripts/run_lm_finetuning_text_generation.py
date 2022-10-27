@@ -25,7 +25,9 @@ gc.collect()
 train_dataset_path = sys.argv[1]
 test_dataset_path = sys.argv[2]
 epochs = int(sys.argv[3])
-accuracy_mode = sys.argv[4] # binary segmented
+accuracy_mode = sys.argv[4] # binary partial
+
+hypothesis_generation_file_path = "/".join(train_dataset_path.split("/")[:-1]) + "/validation_set_hypothesis.txt"
 
 num_bits = train_dataset_path.split("num_bits_")[-1][0]
 if num_bits != "m":
@@ -99,6 +101,76 @@ model.cuda()
 
 optimizer = torch.optim.Adam(model.parameters(),lr = 0.0005)
 model = model.to(device)
+
+def eval_on_test_data_hyp_generation(test_sentences):
+  total = 0
+  weird_outputs = set()
+  for i in range(len(test_sentences)):
+    if i % 1000 == 0:
+      print("evaluating test sentence " + str(i))
+
+
+    full_sentence_with_hyp = test_sentences[i] # [ 1, 0, 0, 0, 1]: True, [ 0, 1, 0, 0, 1]: True, [ 0, 1, 0, 0, 0]: True, [ 1, 1, 0, 1, 0]: True, [ 1, 0, 1, 1, 1]: True, [ 1, 1, 0, 1, 1]: True
+
+    hypothesis_str = full_sentence_with_hyp.split("hyp: ")[-1].split(",")[0]
+
+    hypothesis_str_prefix = full_sentence_with_hyp.split(", hyp: ")[0]
+    split_hypothesis_str_prefix = list(map(lambda s : s if s[-1] == "e" else s + "e", hypothesis_str_prefix.split("e,")))
+    formatted_hypothesis_str_prefix_partial_sentences = list(map(lambda i: ",".join(split_hypothesis_str_prefix[0: i + 1]), range(len(split_hypothesis_str_prefix))))[1:]
+
+    hypothesis_index = len(formatted_hypothesis_str_prefix_partial_sentences)
+
+    full_sentence = full_sentence_with_hyp.replace(", hyp: " + hypothesis_str, "")
+    split_full_sentence = list(map(lambda s : s if s[-1] == "e" else s + "e", full_sentence.split("e,")))
+    formatted_partial_sentences = list(map(lambda i: ",".join(split_full_sentence[0: i + 1]), range(len(split_full_sentence))))[1:]
+    num_correct = 0
+    for i in range(len(formatted_partial_sentences)):
+      sentence = formatted_partial_sentences[i]
+      if i >= hypothesis_index:
+        sentence = "e,".join(sentence.split("e,")[:hypothesis_index + 1]) + "e, hyp: " + hypothesis_str + "," +  "e,".join(sentence.split("e,")[hypothesis_index + 1:])
+
+      prompt = ":".join(sentence.split(":")[:-1]) + ":"
+      answer = sentence.split(":")[-1].replace(" ", "")
+      input_seq = prompt
+      generated = torch.tensor(tokenizer.encode(input_seq)).unsqueeze(0)
+      generated = generated.to(device)
+      sample_outputs = model.generate(
+                                  generated, 
+                                  do_sample=False,   
+                                  max_new_tokens = 1,
+                                  num_return_sequences=1,
+                                  pad_token_id=50256,
+                                  )
+
+      prediction = tokenizer.decode(sample_outputs[0], skip_special_tokens=True).split(":")[-1].replace(" ", "")
+      # print("prediction: " + prediction)
+      # print("answer: " + answer)
+      if prediction == answer:
+        num_correct += 1
+      elif not prediction in ["True", "False"]:
+        weird_outputs.add(prediction)
+
+      if i == hypothesis_index - 1:
+        hyp_generation_prompt = sentence + ", hyp: "
+        input_seq = hyp_generation_prompt
+        generated = torch.tensor(tokenizer.encode(input_seq)).unsqueeze(0)
+        generated = generated.to(device)
+        sample_outputs = model.generate(
+                                    generated, 
+                                    do_sample=False,   
+                                    max_new_tokens = 300,
+                                    num_return_sequences=1,
+                                    pad_token_id=50256,
+                                    )
+
+        prediction = tokenizer.decode(sample_outputs[0], skip_special_tokens=True).split(":")[-1].replace(" ", "") 
+        with open(hypothesis_generation_file_path, "a") as f:
+          f.write("PREDICTION: " + prediction + "\n")
+          f.write("ACTUAL: " + hypothesis_str + "\n")
+
+    total += num_correct/len(formatted_partial_sentences)
+
+  return total/len(test_sentences), weird_outputs
 
 def eval_on_test_data_partial(test_sentences):
   total = 0
@@ -235,6 +307,12 @@ elif accuracy_mode == "partial":
 
   test_accuracy, weird_test_outputs = eval_on_test_data_partial(test_sentences)
   print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+elif accuracy_mode == "hyp":
+  train_accuracy, weird_train_outputs = eval_on_test_data_hyp_generation(all_sentences)
+  print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
+
+  test_accuracy, weird_test_outputs = eval_on_test_data_hyp_generation(test_sentences)
+  print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
 
 train_accuracies.append(train_accuracy)
 test_accuracies.append(test_accuracy)
@@ -255,6 +333,13 @@ for i in range(epochs):
 
     test_accuracy, weird_test_outputs = eval_on_test_data_partial(test_sentences)
     print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+  elif accuracy_mode == "hyp":
+    train_accuracy, weird_train_outputs = eval_on_test_data_hyp_generation(all_sentences)
+    print("CURRENT TRAIN ACCURACY: " + str((train_accuracy, weird_train_outputs)))
+
+    test_accuracy, weird_test_outputs = eval_on_test_data_hyp_generation(test_sentences)
+    print("CURRENT TEST ACCURACY: " + str((test_accuracy, weird_test_outputs)))
+
 
   train_accuracies.append(train_accuracy)
   test_accuracies.append(test_accuracy)
