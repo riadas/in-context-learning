@@ -37,7 +37,8 @@ print("validation_formulas length: " + str(len(validation_formulas)))
 #hyp_generation_training_data_path = existing_dataset_directory + "hyp_generation_training_data_mode " + pretty + ".txt"
 #hyp_generation_validation_data_path = existing_dataset_directory + "hyp_generation_validation_data_mode " + pretty + ".txt"
 
-
+training_hyp_indices = [random.sample(list(range(1, len(sentence.split(", [")))), 1)[0] for sentence in training_sentences]
+validation_hyp_indices = [random.sample(list(range(1, len(sentence.split(", [")))), 1)[0] for sentence in validation_sentences]
 
 for pretty in ["all", "missing-and-or", "none"]:
   hyp_generation_training_data_path = existing_dataset_directory + "hyp_generation_training_data_mode " + pretty + ".txt"
@@ -48,7 +49,7 @@ for pretty in ["all", "missing-and-or", "none"]:
       formula = training_formulas[i]
 
       prompts = sentence.split(", [")
-      index = random.sample(list(range(1, len(prompts))), 1)[0]
+      index = training_hyp_indices[i]
  
       if pretty == "missing-and-or":
         pretty_formula = prettify(formula, change_and_or=False)
@@ -69,7 +70,7 @@ for pretty in ["all", "missing-and-or", "none"]:
       formula = validation_formulas[i]
     
       prompts = sentence.split(", [")
-      index = random.sample(list(range(1, len(prompts))), 1)[0]
+      index = validation_hyp_indices[i]
 
       for pretty in ["all", "missing-and-or", "none"]:
         if pretty == "missing-and-or":
